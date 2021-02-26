@@ -75,9 +75,7 @@ class _Body extends StatelessWidget {
 }
 
 class _NumbersList extends StatelessWidget {
-  final TextEditingController controller;
-
-  const _NumbersList({Key key, this.controller}) : super(key: key);
+  const _NumbersList({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -99,9 +97,7 @@ class _NumbersList extends StatelessWidget {
 }
 
 class _MethodsList extends StatelessWidget {
-  final TextEditingController controller;
-
-  const _MethodsList({Key key, this.controller}) : super(key: key);
+  const _MethodsList({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -119,8 +115,7 @@ class _MethodsList extends StatelessWidget {
 }
 
 class _ClearButton extends StatelessWidget {
-  final TextEditingController controller;
-  const _ClearButton({Key key, this.controller}) : super(key: key);
+  const _ClearButton({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
