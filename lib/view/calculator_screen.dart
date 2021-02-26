@@ -1,7 +1,6 @@
 import 'package:calculator/bloc/calculator_bloc.dart';
-import 'package:calculator/models/models_enum.dart';
-import 'package:calculator/view/methods_button.dart';
-import 'package:calculator/view/numbers_button.dart';
+import 'package:calculator/view/methods_list.dart';
+import 'package:calculator/view/numbers_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,11 +13,7 @@ class CalculatorScreen extends StatelessWidget {
       create: (context) {
         return CalculatorBloc();
       },
-      child: BlocBuilder<CalculatorBloc, CalculatorState>(
-        builder: (context, state) {
-          return _Body();
-        },
-      ),
+      child: _Body(),
     );
   }
 }
@@ -40,7 +35,7 @@ class _Body extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
-              child: _NumbersList(),
+              child: NumbersList(),
             ),
             Expanded(
               child: TextField(
@@ -58,7 +53,7 @@ class _Body extends StatelessWidget {
                 children: [
                   Expanded(
                     flex: 4,
-                    child: _MethodsList(),
+                    child: MethodsList(),
                   ),
                   Expanded(
                     flex: 1,
@@ -70,46 +65,6 @@ class _Body extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _NumbersList extends StatelessWidget {
-  const _NumbersList({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    // ignore: close_sinks
-    final provider = context.read<CalculatorBloc>();
-
-    return GridView.builder(
-      itemCount: provider.number.length,
-      gridDelegate:
-          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5),
-      itemBuilder: (BuildContext context, int index) {
-        return NumbersButton(
-          value: provider.number[index].toString(),
-          method: provider.method,
-        );
-      },
-    );
-  }
-}
-
-class _MethodsList extends StatelessWidget {
-  const _MethodsList({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GridView.builder(
-      itemCount: Method.values.length,
-      gridDelegate:
-          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
-      itemBuilder: (BuildContext context, int index) {
-        return MethodsButton(
-          method: Method.values[index],
-        );
-      },
     );
   }
 }

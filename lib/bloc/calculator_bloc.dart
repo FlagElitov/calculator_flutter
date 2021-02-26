@@ -25,11 +25,10 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
   ) async* {
     if (event is InputValueEvent) {
       controller.text += event.value.toString();
-      if (method == null) {
-        value1 = int.parse(value1.toString() + event.value);
-      } else {
-        value2 = int.parse(value2.toString() + event.value);
-      }
+
+      method == null
+          ? value1 = int.parse(value1.toString() + event.value)
+          : value2 = int.parse(value2.toString() + event.value);
     }
 
     if (event is SetMethodsEvent) {
