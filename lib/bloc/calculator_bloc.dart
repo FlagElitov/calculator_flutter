@@ -21,12 +21,13 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
   Stream<CalculatorState> mapEventToState(
     CalculatorEvent event,
   ) async* {
-    if (event is ClearAllEvent) {
-      event.controller.text = "";
-      method = null;
-      value1 = 0;
-      value2 = 0;
-      answer = 0;
+    if (event is InputValueEvent) {
+      event.controller.text += event.value.toString();
+      if (method == null) {
+        value1 = int.parse(value1.toString() + event.value);
+      } else {
+        value2 = int.parse(value2.toString() + event.value);
+      }
     }
 
     if (event is SetMethodsEvent) {
@@ -48,18 +49,16 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
         case Method.mult:
           answer = value1.toDouble() * value2.toDouble();
           break;
-        case Method.eq:
-          event.controller.text += '=' + answer.toString();
-          break;
       }
+      event.controller.text += '=' + answer.toString();
     }
-    if (event is ChoiceValueEvent) {
-      event.controller.text += event.value.toString();
-      if (method == null) {
-        value1 = int.parse(value1.toString() + event.value);
-      } else {
-        value2 = int.parse(value2.toString() + event.value);
-      }
+
+    if (event is ClearAllEvent) {
+      event.controller.text = "";
+      method = null;
+      value1 = 0;
+      value2 = 0;
+      answer = 0;
     }
   }
 }

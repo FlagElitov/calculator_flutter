@@ -1,4 +1,4 @@
-enum Method { plus, minus, devide, mult, eq }
+enum Method { plus, minus, devide, mult }
 
 // ignore: missing_return
 String getMethods(Method methods) {
@@ -14,9 +14,6 @@ String getMethods(Method methods) {
       break;
     case Method.mult:
       return '*';
-      break;
-    case Method.eq:
-      return '=';
       break;
   }
 }

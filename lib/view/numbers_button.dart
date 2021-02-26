@@ -17,11 +17,9 @@ class NumbersButton extends StatelessWidget {
     return Card(
       child: new GridTile(
         child: FlatButton(
-          onPressed: () => {
-            provider.add(
-              ChoiceValueEvent(controller, value),
-            )
-          },
+          onPressed: () => provider.add(
+            InputValueEvent(controller, value),
+          ),
           child: Text(value),
         ),
       ),

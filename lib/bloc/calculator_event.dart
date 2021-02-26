@@ -3,10 +3,11 @@ part of 'calculator_bloc.dart';
 @immutable
 abstract class CalculatorEvent {}
 
-class ClearAllEvent extends CalculatorEvent {
+class InputValueEvent extends CalculatorEvent {
   final TextEditingController controller;
+  final value;
 
-  ClearAllEvent(this.controller);
+  InputValueEvent(this.controller, this.value);
 }
 
 class SetMethodsEvent extends CalculatorEvent {
@@ -22,9 +23,8 @@ class CalculateNumbersEvent extends CalculatorEvent {
   CalculateNumbersEvent(this.controller);
 }
 
-class ChoiceValueEvent extends CalculatorEvent {
+class ClearAllEvent extends CalculatorEvent {
   final TextEditingController controller;
-  final value;
 
-  ChoiceValueEvent(this.controller, this.value);
+  ClearAllEvent(this.controller);
 }

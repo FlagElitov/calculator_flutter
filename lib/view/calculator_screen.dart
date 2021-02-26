@@ -5,13 +5,9 @@ import 'package:calculator/view/numbers_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CalculatorScreen extends StatefulWidget {
-  CalculatorScreen({Key key}) : super(key: key);
-  @override
-  _CalculatorScreenState createState() => _CalculatorScreenState();
-}
+class CalculatorScreen extends StatelessWidget {
+  const CalculatorScreen({Key key}) : super(key: key);
 
-class _CalculatorScreenState extends State<CalculatorScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -35,9 +31,6 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ignore: close_sinks
-    final provider = context.read<CalculatorBloc>();
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Calculator'),
@@ -57,19 +50,21 @@ class _Body extends StatelessWidget {
                 ),
               ),
             ),
+            Expanded(child: _ClearButton(controller: _controller)),
             Expanded(
-              child: FlatButton(
-                onPressed: () => provider.add(
-                  ClearAllEvent(_controller),
-                ),
-                child: Text(
-                  "Clean",
-                  style: TextStyle(fontSize: 30.0),
-                ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 4,
+                    child: _MethodsList(controller: _controller),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: _EquelButton(controller: _controller),
+                  ),
+                ],
               ),
-            ),
-            Expanded(
-              child: _MethodsList(controller: _controller),
             ),
           ],
         ),
@@ -113,13 +108,62 @@ class _MethodsList extends StatelessWidget {
     return GridView.builder(
       itemCount: Method.values.length,
       gridDelegate:
-          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5),
+          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
       itemBuilder: (BuildContext context, int index) {
         return MethodsButton(
           method: Method.values[index],
           controller: controller,
         );
       },
+    );
+  }
+}
+
+class _ClearButton extends StatelessWidget {
+  final TextEditingController controller;
+  const _ClearButton({Key key, this.controller}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // ignore: close_sinks
+    final provider = context.read<CalculatorBloc>();
+
+    return FlatButton(
+      onPressed: () => provider.add(
+        ClearAllEvent(controller),
+      ),
+      child: Text(
+        "Clean",
+        style: TextStyle(fontSize: 30.0),
+      ),
+    );
+  }
+}
+
+class _EquelButton extends StatelessWidget {
+  final TextEditingController controller;
+  const _EquelButton({Key key, this.controller}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // ignore: close_sinks
+    final provider = context.read<CalculatorBloc>();
+
+    return Container(
+      height: 85,
+      child: Card(
+        child: new GridTile(
+          child: FlatButton(
+            onPressed: () => provider.add(
+              CalculateNumbersEvent(controller),
+            ),
+            child: Text(
+              '=',
+              style: TextStyle(fontSize: 30.0),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

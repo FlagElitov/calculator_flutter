@@ -10,28 +10,17 @@ class MethodsButton extends StatelessWidget {
   const MethodsButton({Key key, this.controller, this.method})
       : super(key: key);
 
-  _changeMethodState(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     // ignore: close_sinks
     final provider = context.read<CalculatorBloc>();
 
-    provider.method == Method.eq
-        ? provider.add(
-            CalculateNumbersEvent(controller),
-          )
-        : provider.add(
-            SetMethodsEvent(
-              controller,
-              method,
-            ),
-          );
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Card(
       child: new GridTile(
         child: FlatButton(
-          onPressed: () => _changeMethodState(context),
+          onPressed: () => provider.add(
+            SetMethodsEvent(controller, method),
+          ),
           child: Text(
             getMethods(method),
             style: TextStyle(fontSize: 30.0),
