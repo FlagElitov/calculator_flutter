@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class NumbersButton extends StatelessWidget {
-  final TextEditingController controller;
   final value;
   final method;
 
-  const NumbersButton({Key key, this.controller, this.value, this.method})
-      : super(key: key);
+  const NumbersButton({Key key, this.value, this.method}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +16,7 @@ class NumbersButton extends StatelessWidget {
       child: new GridTile(
         child: FlatButton(
           onPressed: () => provider.add(
-            InputValueEvent(controller, value),
+            InputValueEvent(value),
           ),
           child: Text(value),
         ),

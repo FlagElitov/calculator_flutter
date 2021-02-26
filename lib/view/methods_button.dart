@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MethodsButton extends StatelessWidget {
-  final TextEditingController controller;
   final Method method;
 
-  const MethodsButton({Key key, this.controller, this.method})
-      : super(key: key);
+  const MethodsButton({Key key, this.method}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +17,7 @@ class MethodsButton extends StatelessWidget {
       child: new GridTile(
         child: FlatButton(
           onPressed: () => provider.add(
-            SetMethodsEvent(controller, method),
+            SetMethodsEvent(method),
           ),
           child: Text(
             getMethods(method),
