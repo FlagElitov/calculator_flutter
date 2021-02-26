@@ -13,7 +13,11 @@ class CalculatorScreen extends StatelessWidget {
       create: (context) {
         return CalculatorBloc();
       },
-      child: _Body(),
+      child: BlocBuilder<CalculatorBloc, CalculatorState>(
+        builder: (context, state) {
+          return _Body();
+        },
+      ),
     );
   }
 }
@@ -22,10 +26,10 @@ class CalculatorScreen extends StatelessWidget {
 class _Body extends StatelessWidget {
   _Body({Key key}) : super(key: key);
 
+  final TextEditingController controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    // ignore: close_sinks
-    final provider = context.read<CalculatorBloc>();
     return Scaffold(
       appBar: AppBar(
         title: Text('Calculator'),
@@ -40,13 +44,13 @@ class _Body extends StatelessWidget {
             Expanded(
               child: TextField(
                 readOnly: true,
-                controller: provider.controller,
+                controller: controller,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                 ),
               ),
             ),
-            Expanded(child: _ClearButton()),
+            Expanded(child: _ClearButton(controller: controller)),
             Expanded(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,7 +74,9 @@ class _Body extends StatelessWidget {
 }
 
 class _ClearButton extends StatelessWidget {
-  const _ClearButton({Key key}) : super(key: key);
+  final TextEditingController controller;
+
+  _ClearButton({Key key, this.controller}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +85,7 @@ class _ClearButton extends StatelessWidget {
 
     return FlatButton(
       onPressed: () => provider.add(
-        ClearAllEvent(),
+        ClearAllEvent(controller),
       ),
       child: Text(
         "Clean",
@@ -90,7 +96,8 @@ class _ClearButton extends StatelessWidget {
 }
 
 class _EquelButton extends StatelessWidget {
-  const _EquelButton({Key key}) : super(key: key);
+  final TextEditingController controller;
+  const _EquelButton({Key key, this.controller}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +110,7 @@ class _EquelButton extends StatelessWidget {
         child: new GridTile(
           child: FlatButton(
             onPressed: () => provider.add(
-              CalculateNumbersEvent(),
+              CalculateNumbersEvent(controller),
             ),
             child: Text(
               '=',

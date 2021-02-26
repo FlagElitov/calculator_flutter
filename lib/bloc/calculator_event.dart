@@ -5,20 +5,26 @@ abstract class CalculatorEvent {}
 
 class InputValueEvent extends CalculatorEvent {
   final value;
+  TextEditingController controller = TextEditingController();
 
   InputValueEvent(this.value);
 }
 
 class SetMethodsEvent extends CalculatorEvent {
   final Method method;
+  TextEditingController controller = TextEditingController();
 
-  SetMethodsEvent(this.method);
+  SetMethodsEvent(this.controller, this.method);
 }
 
 class CalculateNumbersEvent extends CalculatorEvent {
-  CalculateNumbersEvent();
+  TextEditingController controller = TextEditingController();
+
+  CalculateNumbersEvent(this.controller);
 }
 
 class ClearAllEvent extends CalculatorEvent {
-  ClearAllEvent();
+  TextEditingController controller = TextEditingController();
+
+  ClearAllEvent(this.controller);
 }

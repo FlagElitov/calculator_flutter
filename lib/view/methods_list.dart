@@ -3,7 +3,8 @@ import 'package:calculator/view/methods_button.dart';
 import 'package:flutter/material.dart';
 
 class MethodsList extends StatelessWidget {
-  const MethodsList({Key key}) : super(key: key);
+  final TextEditingController controller = TextEditingController();
+  MethodsList({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +15,7 @@ class MethodsList extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         return MethodsButton(
           method: Method.values[index],
+          controller: controller,
         );
       },
     );
