@@ -6,8 +6,31 @@ void main() {
 
 int value1 = 0;
 int value2 = 0;
-String method;
-int answer = 0;
+Methods method;
+double answer = 0;
+
+enum Methods { plus, minus, devide, mult, eq }
+
+// ignore: missing_return
+String getMethods(Methods methods, BuildContext context) {
+  switch (methods) {
+    case Methods.plus:
+      return '+';
+      break;
+    case Methods.minus:
+      return '-';
+      break;
+    case Methods.devide:
+      return '/';
+      break;
+    case Methods.mult:
+      return '*';
+      break;
+    case Methods.eq:
+      return '=';
+      break;
+  }
+}
 
 TextEditingController controller = TextEditingController();
 
@@ -33,7 +56,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<int> number = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-  List<String> methodArray = ["+", "-", "/", "*", "="];
 
   void allClear() {
     setState(() {
@@ -86,12 +108,13 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Expanded(
               child: GridView.builder(
-                itemCount: methodArray.length,
+                itemCount: Methods.values.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 5),
                 itemBuilder: (BuildContext context, int index) {
+                  print(Methods.values);
                   return MethodWidget(
-                    value: methodArray[index],
+                    value: Methods.values[index],
                   );
                 },
               ),
@@ -104,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class ButtonCulc extends StatefulWidget {
-  final String value;
+  final value;
   final method;
 
   ButtonCulc({
@@ -118,7 +141,8 @@ class ButtonCulc extends StatefulWidget {
 }
 
 class _ButtonCulcState extends State<ButtonCulc> {
-  final String value;
+  final value;
+
   _ButtonCulcState(this.value);
 
   @override
@@ -146,7 +170,7 @@ class _ButtonCulcState extends State<ButtonCulc> {
 }
 
 class MethodWidget extends StatefulWidget {
-  final value;
+  final Methods value;
 
   const MethodWidget({Key key, this.value}) : super(key: key);
 
@@ -158,7 +182,6 @@ class _MethodWidgetState extends State<MethodWidget> {
   void _setMethod(text) {
     setState(() {
       controller.text += text;
-
       method = text;
     });
   }
@@ -166,16 +189,23 @@ class _MethodWidgetState extends State<MethodWidget> {
   void _answerClick() {
     setState(
       () {
-        if (method == "+") {
-          answer = value1 + value2;
-        } else if (method == "-") {
-          answer = value1 - value2;
-        } else if (method == "/") {
-          answer = value1 ~/ value2;
-        } else if (method == "*") {
-          answer = value1 * value2;
+        switch (method) {
+          case Methods.plus:
+            return answer = value1.toDouble() + value2.toDouble();
+            break;
+          case Methods.minus:
+            return answer = value1.toDouble() - value2.toDouble();
+            break;
+          case Methods.devide:
+            return answer = value1.toDouble() / value2.toDouble();
+            break;
+          case Methods.mult:
+            return answer = value1.toDouble() * value2.toDouble();
+            break;
+          case Methods.eq:
+            return controller.text += '=' + answer.toString();
+            break;
         }
-        controller.text += '=' + answer.toString();
       },
     );
   }
@@ -186,12 +216,12 @@ class _MethodWidgetState extends State<MethodWidget> {
       child: new GridTile(
         child: FlatButton(
           onPressed: () => {
-            widget.value == "="
+            widget.value == Methods.eq
                 ? this._answerClick()
-                : this._setMethod(widget.value)
+                : this._setMethod(Methods)
           },
           child: Text(
-            widget.value,
+            getMethods(widget.value, context),
             style: TextStyle(fontSize: 30.0),
           ),
         ),
