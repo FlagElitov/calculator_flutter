@@ -10,6 +10,8 @@ part 'calculator_state.dart';
 class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
   CalculatorBloc() : super(CalculatorInitial());
 
+  TextEditingController controller = TextEditingController();
+
   List<int> number = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 
   int value1 = 0;
@@ -22,7 +24,7 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
     CalculatorEvent event,
   ) async* {
     if (event is InputValueEvent) {
-      event.controller.text += event.value.toString();
+      controller.text += event.value.toString();
       if (method == null) {
         value1 = int.parse(value1.toString() + event.value);
       } else {
@@ -31,7 +33,7 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
     }
 
     if (event is SetMethodsEvent) {
-      event.controller.text += getMethods(event.method);
+      controller.text += getMethods(event.method);
       method = event.method;
     }
 
@@ -50,11 +52,11 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
           answer = value1.toDouble() * value2.toDouble();
           break;
       }
-      event.controller.text += '=' + answer.toString();
+      controller.text += '=' + answer.toStringAsFixed(2);
     }
 
     if (event is ClearAllEvent) {
-      event.controller.text = "";
+      controller.text = "";
       method = null;
       value1 = 0;
       value2 = 0;

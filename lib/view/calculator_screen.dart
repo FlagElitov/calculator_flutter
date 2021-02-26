@@ -27,10 +27,10 @@ class CalculatorScreen extends StatelessWidget {
 class _Body extends StatelessWidget {
   _Body({Key key}) : super(key: key);
 
-  TextEditingController _controller = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
+    // ignore: close_sinks
+    final provider = context.read<CalculatorBloc>();
     return Scaffold(
       appBar: AppBar(
         title: Text('Calculator'),
@@ -40,28 +40,29 @@ class _Body extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
-              child: _NumbersList(controller: _controller),
+              child: _NumbersList(),
             ),
             Expanded(
               child: TextField(
-                controller: _controller,
+                readOnly: true,
+                controller: provider.controller,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                 ),
               ),
             ),
-            Expanded(child: _ClearButton(controller: _controller)),
+            Expanded(child: _ClearButton()),
             Expanded(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     flex: 4,
-                    child: _MethodsList(controller: _controller),
+                    child: _MethodsList(),
                   ),
                   Expanded(
                     flex: 1,
-                    child: _EquelButton(controller: _controller),
+                    child: _EquelButton(),
                   ),
                 ],
               ),
@@ -91,7 +92,6 @@ class _NumbersList extends StatelessWidget {
         return NumbersButton(
           value: provider.number[index].toString(),
           method: provider.method,
-          controller: controller,
         );
       },
     );
@@ -112,7 +112,6 @@ class _MethodsList extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         return MethodsButton(
           method: Method.values[index],
-          controller: controller,
         );
       },
     );
@@ -130,7 +129,7 @@ class _ClearButton extends StatelessWidget {
 
     return FlatButton(
       onPressed: () => provider.add(
-        ClearAllEvent(controller),
+        ClearAllEvent(),
       ),
       child: Text(
         "Clean",
@@ -141,8 +140,7 @@ class _ClearButton extends StatelessWidget {
 }
 
 class _EquelButton extends StatelessWidget {
-  final TextEditingController controller;
-  const _EquelButton({Key key, this.controller}) : super(key: key);
+  const _EquelButton({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +153,7 @@ class _EquelButton extends StatelessWidget {
         child: new GridTile(
           child: FlatButton(
             onPressed: () => provider.add(
-              CalculateNumbersEvent(controller),
+              CalculateNumbersEvent(),
             ),
             child: Text(
               '=',
