@@ -11,34 +11,48 @@ class CalculatorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) {
-        return CalculatorBloc();
-      },
-      child: BlocBuilder<CalculatorBloc, CalculatorState>(
-        builder: (context, state) {
-          // ignore: close_sinks
-          final provider = context.read<CalculatorBloc>();
-
-          if (state is CalculatorSuccessState) {
-            controller.text += '=' + state.answer.toStringAsFixed(2);
-          }
-          if (state is CalculatorFailedState) {
-            controller.text = state.error;
-          }
-
-          if (state is ClearCalculatorState) {
-            controller.text = "";
-          }
-
-          if (state is RefreshCalculatorState) {
-            provider.add(RefreshCalculatorEvent());
-          }
-
-          return _Body(
-            controller: controller,
-          );
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Calculator'),
+      ),
+      body: BlocProvider(
+        create: (context) {
+          return CalculatorBloc();
         },
+        child: BlocListener<CalculatorBloc, CalculatorState>(
+          listener: (context, state) {
+            if (state is CalculatorFailedState) {
+              Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.error),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+          child: BlocBuilder<CalculatorBloc, CalculatorState>(
+            builder: (context, state) {
+              // ignore: close_sinks
+              final provider = context.read<CalculatorBloc>();
+
+              if (state is CalculatorSuccessState) {
+                controller.text += '=' + state.answer.toStringAsFixed(2);
+              }
+
+              if (state is ClearCalculatorState) {
+                controller.text = "";
+              }
+
+              if (state is RefreshCalculatorState) {
+                provider.add(RefreshCalculatorEvent());
+              }
+
+              return _Body(
+                controller: controller,
+              );
+            },
+          ),
+        ),
       ),
     );
   }
@@ -52,48 +66,43 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Calculator'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: NumbersList(
-                controller: controller,
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: NumbersList(
+              controller: controller,
+            ),
+          ),
+          Expanded(
+            child: TextField(
+              readOnly: true,
+              controller: controller,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
               ),
             ),
-            Expanded(
-              child: TextField(
-                readOnly: true,
-                controller: controller,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
+          ),
+          Expanded(child: _ClearButton(controller: controller)),
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 4,
+                  child: MethodsList(
+                    controller: controller,
+                  ),
                 ),
-              ),
+                Expanded(
+                  flex: 1,
+                  child: _EquelButton(controller: controller),
+                ),
+              ],
             ),
-            Expanded(child: _ClearButton(controller: controller)),
-            Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 4,
-                    child: MethodsList(
-                      controller: controller,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: _EquelButton(controller: controller),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
