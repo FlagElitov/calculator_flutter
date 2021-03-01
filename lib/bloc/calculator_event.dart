@@ -5,32 +5,28 @@ abstract class CalculatorEvent {}
 
 // ignore: must_be_immutable
 class InputValueEvent extends CalculatorEvent {
-  final value;
-  TextEditingController controller;
+  final String value;
 
-  InputValueEvent(this.value, this.controller);
+  InputValueEvent(
+    this.value,
+  );
 }
 
 // ignore: must_be_immutable
 class SetMethodsEvent extends CalculatorEvent {
-  final Method method;
-  TextEditingController controller;
+  Method method;
 
-  SetMethodsEvent(this.controller, this.method);
+  SetMethodsEvent(this.method);
 }
 
 // ignore: must_be_immutable
 class CalculateNumbersEvent extends CalculatorEvent {
-  TextEditingController controller;
-
-  CalculateNumbersEvent(this.controller);
+  CalculateNumbersEvent();
 }
 
 // ignore: must_be_immutable
 class ClearAllEvent extends CalculatorEvent {
-  TextEditingController controller;
-
-  ClearAllEvent(this.controller);
+  ClearAllEvent();
 }
 
 class RefreshCalculatorEvent extends CalculatorEvent {}

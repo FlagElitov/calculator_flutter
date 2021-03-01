@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class NumbersList extends StatelessWidget {
-  final TextEditingController controller;
-  const NumbersList({Key key, this.controller}) : super(key: key);
+  const NumbersList({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +20,6 @@ class NumbersList extends StatelessWidget {
         return NumbersButton(
           value: number[index].toString(),
           method: provider.method,
-          controller: controller,
         );
       },
     );

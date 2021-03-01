@@ -20,38 +20,42 @@ class CalculatorBloc extends Bloc<CalculatorEvent, CalculatorState> {
     CalculatorEvent event,
   ) async* {
     if (event is InputValueEvent) {
-      event.controller.text += event.value.toString();
+      final String value = event.value.toString();
 
       if (method == null) {
         value1 = int.parse(value1.toString() + event.value);
       } else {
         value2 = int.parse(value2.toString() + event.value);
       }
-      yield RefreshCalculatorState();
+      yield AddInputValueState(value);
     }
 
     if (event is SetMethodsEvent) {
-      event.controller.text += getMethods(event.method);
       method = event.method;
-      yield RefreshCalculatorState();
+
+      yield AddMethodState(event.method);
     }
 
     if (event is CalculateNumbersEvent) {
       switch (method) {
         case Method.plus:
-          answer = value1.toDouble() + value2.toDouble();
+          answer = value1 + value2.toDouble();
           yield CalculatorSuccessState(answer);
           break;
         case Method.minus:
-          answer = value1.toDouble() - value2.toDouble();
+          answer = value1 - value2.toDouble();
           yield CalculatorSuccessState(answer);
           break;
         case Method.devide:
-          answer = value1.toDouble() / value2.toDouble();
-          yield CalculatorSuccessState(answer);
+          answer = value1 / value2.toDouble();
+          if (answer == double.infinity) {
+            yield CalculatorSuccessState(answer = 0);
+          } else {
+            yield CalculatorSuccessState(answer);
+          }
           break;
         case Method.mult:
-          answer = value1.toDouble() * value2.toDouble();
+          answer = value1 * value2.toDouble();
           yield CalculatorSuccessState(answer);
           break;
         default:

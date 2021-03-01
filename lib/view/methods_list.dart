@@ -15,7 +15,6 @@ class MethodsList extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         return MethodsButton(
           method: Method.values[index],
-          controller: controller,
         );
       },
     );

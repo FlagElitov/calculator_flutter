@@ -1,4 +1,5 @@
 import 'package:calculator/bloc/calculator_bloc.dart';
+import 'package:calculator/models/models_enum.dart';
 import 'package:calculator/view/methods_list.dart';
 import 'package:calculator/view/numbers_list.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class CalculatorScreen extends StatelessWidget {
         child: BlocListener<CalculatorBloc, CalculatorState>(
           listener: (context, state) {
             if (state is CalculatorFailedState) {
+              controller.text = '';
               Scaffold.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.error),
@@ -36,7 +38,14 @@ class CalculatorScreen extends StatelessWidget {
               final provider = context.read<CalculatorBloc>();
 
               if (state is CalculatorSuccessState) {
-                controller.text += '=' + state.answer.toStringAsFixed(2);
+                controller.text += '=' + state.stringAnswer;
+              }
+              if (state is AddInputValueState) {
+                controller.text += state.value;
+              }
+
+              if (state is AddMethodState) {
+                controller.text += getMethods(state.methods);
               }
 
               if (state is ClearCalculatorState) {
@@ -44,7 +53,9 @@ class CalculatorScreen extends StatelessWidget {
               }
 
               if (state is RefreshCalculatorState) {
-                provider.add(RefreshCalculatorEvent());
+                provider.add(
+                  RefreshCalculatorEvent(),
+                );
               }
 
               return _Body(
@@ -71,9 +82,7 @@ class _Body extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
-            child: NumbersList(
-              controller: controller,
-            ),
+            child: NumbersList(),
           ),
           Expanded(
             child: TextField(
@@ -84,20 +93,18 @@ class _Body extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(child: _ClearButton(controller: controller)),
+          Expanded(child: _ClearButton()),
           Expanded(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   flex: 4,
-                  child: MethodsList(
-                    controller: controller,
-                  ),
+                  child: MethodsList(),
                 ),
                 Expanded(
                   flex: 1,
-                  child: _EquelButton(controller: controller),
+                  child: _EquelButton(),
                 ),
               ],
             ),
@@ -109,9 +116,9 @@ class _Body extends StatelessWidget {
 }
 
 class _ClearButton extends StatelessWidget {
-  final TextEditingController controller;
-
-  _ClearButton({Key key, this.controller}) : super(key: key);
+  _ClearButton({
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +127,7 @@ class _ClearButton extends StatelessWidget {
 
     return FlatButton(
       onPressed: () => provider.add(
-        ClearAllEvent(controller),
+        ClearAllEvent(),
       ),
       child: Text(
         "Clean",
@@ -131,8 +138,7 @@ class _ClearButton extends StatelessWidget {
 }
 
 class _EquelButton extends StatelessWidget {
-  final TextEditingController controller;
-  const _EquelButton({Key key, this.controller}) : super(key: key);
+  const _EquelButton({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +151,7 @@ class _EquelButton extends StatelessWidget {
         child: new GridTile(
           child: FlatButton(
             onPressed: () => provider.add(
-              CalculateNumbersEvent(controller),
+              CalculateNumbersEvent(),
             ),
             child: Text(
               '=',
