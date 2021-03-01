@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CalculatorScreen extends StatelessWidget {
-  const CalculatorScreen({Key key}) : super(key: key);
+  CalculatorScreen({Key key}) : super(key: key);
+
+  final TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +17,27 @@ class CalculatorScreen extends StatelessWidget {
       },
       child: BlocBuilder<CalculatorBloc, CalculatorState>(
         builder: (context, state) {
-          return _Body();
+          // ignore: close_sinks
+          final provider = context.read<CalculatorBloc>();
+
+          if (state is CalculatorSuccessState) {
+            controller.text += '=' + state.answer.toStringAsFixed(2);
+          }
+          if (state is CalculatorFailedState) {
+            controller.text = state.error;
+          }
+
+          if (state is ClearCalculatorState) {
+            controller.text = "";
+          }
+
+          if (state is RefreshCalculatorState) {
+            provider.add(RefreshCalculatorEvent());
+          }
+
+          return _Body(
+            controller: controller,
+          );
         },
       ),
     );
@@ -24,9 +46,9 @@ class CalculatorScreen extends StatelessWidget {
 
 // ignore: must_be_immutable
 class _Body extends StatelessWidget {
-  _Body({Key key}) : super(key: key);
+  final TextEditingController controller;
 
-  final TextEditingController controller = TextEditingController();
+  _Body({Key key, this.controller}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +61,9 @@ class _Body extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
-              child: NumbersList(),
+              child: NumbersList(
+                controller: controller,
+              ),
             ),
             Expanded(
               child: TextField(
@@ -57,11 +81,13 @@ class _Body extends StatelessWidget {
                 children: [
                   Expanded(
                     flex: 4,
-                    child: MethodsList(),
+                    child: MethodsList(
+                      controller: controller,
+                    ),
                   ),
                   Expanded(
                     flex: 1,
-                    child: _EquelButton(),
+                    child: _EquelButton(controller: controller),
                   ),
                 ],
               ),

@@ -3,8 +3,8 @@ import 'package:calculator/view/methods_button.dart';
 import 'package:flutter/material.dart';
 
 class MethodsList extends StatelessWidget {
-  final TextEditingController controller = TextEditingController();
-  MethodsList({Key key}) : super(key: key);
+  final TextEditingController controller;
+  MethodsList({Key key, this.controller}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
